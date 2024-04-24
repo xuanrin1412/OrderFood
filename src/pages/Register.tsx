@@ -56,13 +56,15 @@ export default function Register() {
                 dob
             },)
                 .then((res) => {
+                    console.log(res);
                     return navigate("/login")
                 })
                 .catch(err => {
-                    toast.error(err.response.data.message)
+                    console.log("err", err.response.data.message[0]);
+                    toast.error(err.response.data.message[0])
                 })
         } else {
-            alert('ko dat yeu cau ')
+            toast("Password is not strong enough")
         }
 
     }
@@ -119,11 +121,11 @@ export default function Register() {
                             <MdOutlineTransgender style={{ height: 24, width: 24, marginLeft: 16, marginRight: 12, color: "#96A0B5" }} />
                             <input value={gender} onChange={e => setGender(e.target.value)} type="text" placeholder="Gender" className="stylePlaceholder flex-1 mr-[2.688rem] outline-none text-base leading-nomalText font-medium tracking-nomalText text-textInput dark:text-white bg-white dark:bg-[#292C38]  " />
                         </span>
-                        <span onFocus={() => { handleInputFocus("email") }}
+                        <span onFocus={() => { handleInputFocus("date") }}
                             onBlur={() => dispatch(setBlur())}
-                            className={`${focusedInput === 'email' ? ' border-third' : 'border-borderColor dark:border-[#565C70]'} h-58 flex items-center pt-[1.188rem] pb-[1.125rem] rounded-xl border  `}>
+                            className={`${focusedInput === 'date' ? ' border-third' : 'border-borderColor dark:border-[#565C70]'} h-58 flex items-center pt-[1.188rem] pb-[1.125rem] rounded-xl border  `}>
                             <FaBirthdayCake style={{ height: 24, width: 24, marginLeft: 16, marginRight: 12, color: "#96A0B5" }} />
-                            <input value={dob} onChange={e => setDob(e.target.value)} type="date" placeholder="Email" className="stylePlaceholder flex-1 mr-[2.688rem] outline-none text-base leading-nomalText font-medium tracking-nomalText text-textInput dark:text-white bg-white dark:bg-[#292C38]  " />
+                            <input value={dob} onChange={e => setDob(e.target.value)} type="date" placeholder="Date of birth" className="stylePlaceholder flex-1 mr-[2.688rem] outline-none text-base leading-nomalText font-medium tracking-nomalText text-textInput dark:text-white bg-white dark:bg-[#292C38]  " />
                         </span>
                         <span onFocus={() => {
                             handleInputFocus("password")

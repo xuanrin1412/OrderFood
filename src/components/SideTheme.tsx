@@ -21,7 +21,7 @@ export default function SideTheme() {
     }, []);
 
     return (
-        <div className={`relative md:w-[400px] lg:w-[500px] xl:w-[640px] bg-secondary ${isDarkMode ? 'dark:bg-[#343744]' : ''} pl-[55px] pt-[86px]`}>
+        <div className={`relative  lg:w-[500px] xl:w-[640px] bg-secondary ${isDarkMode ? 'dark:bg-[#343744]' : ''} pl-[55px] pt-[86px]`}>
             <div className="w-full max-h-[582px]">
                 <img className="h-full w-full object-cover" src={isDarkMode ? CharDark : Char} alt="" />
             </div>
