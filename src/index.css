@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.rectangle{
+    background-color:#347AE2;
+   height: 40px;
+   width: 14px;
+ 
+}
+.leftCircle {
+    background-color:#347AE2;
+    height: 40px;
+    width: 20px;
+    border-bottom-left-radius: 80px;
+    border-top-left-radius: 80px;
+}
+.stylePlaceholder::placeholder {
+    color: "#96A0B5";
+
+}
+
+.divider {
+    position: relative; /* Đặt vị trí tương đối để phần tử con có thể được định vị tương đối đến phần tử cha */
+    display: flex;
+    align-items: center;
+}
+
+.divider::before, .divider::after {
+    flex: 1;
+    content: '';
+    padding: 0.5px;
+    background-color: #ECEFF4;
+    margin: 5px;
+}
+
+.divider-content {
+    position: relative; /* Đặt vị trí tương đối để xác định vị trí của văn bản */
+    z-index: 1; /* Đặt z-index cao hơn so với các pseudo-element để hiển thị phía trên chúng */
+  /* Tùy chỉnh màu nền của văn bản nếu cần */
+ /* Thêm khoảng trắng xung quanh văn bản nếu cần */
+}
+
+.shadowChar{
+    box-shadow: -20px 30px 75px 0px rgba(71, 79, 100, 0.07);
+}
+
+.shadowEllipse{
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.05);
+}
