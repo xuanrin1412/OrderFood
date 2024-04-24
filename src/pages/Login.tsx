@@ -1,6 +1,5 @@
 import USFflag from "../assets/USFlag.png"
 import { IoChevronDown } from "react-icons/io5";
-// import { FiUser } from "react-icons/fi";
 import { LuLock } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import { LuEye } from "react-icons/lu";
@@ -10,11 +9,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { setBlur, setFocus, togglePassword } from "../features/FormAuth/formAuthSlice";
-// import { HiOutlineMail } from "react-icons/hi";
 import axios from "axios";
 import { useState } from "react";
 import { FiUser } from "react-icons/fi";
 import { toast } from 'react-toastify';
+import Cookies from 'js-cookie';
 
 export default function Login() {
     const navigate = useNavigate()
@@ -36,8 +35,7 @@ export default function Login() {
             password
         })
             .then((res) => {
-                console.log(res);
-                // console.log('tra ve login', res.status);
+                Cookies.set("tokenFood", res.data.access_token);
                 toast("Login successful")
                 return navigate("/")
             })

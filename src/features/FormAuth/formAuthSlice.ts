@@ -21,8 +21,6 @@ const formAuthSlice = createSlice({
       state.focusedInput = ""
     },
     togglePassword: (state)=>{
-        //   const ShowPassword = () => {
-        // console.log("kcick")
         const elementPassword = document.getElementsByClassName("password");
         if ((elementPassword.length > 0 && (elementPassword[0] as HTMLInputElement).type === "password")) {
             (elementPassword[0] as HTMLInputElement).type = "text"
