@@ -49,10 +49,10 @@ export default function Content() {
                 {data.role && <div className=" space-x-4"><span className="font-bold">Role: </span> <span>{data.role}</span></div>}
                 <div className=" space-x-4"><span className="font-bold">Email: </span> <span>{data.email}</span></div>
                 <div className=" space-x-4"><span className="font-bold">Username: </span> <span>{data.username}</span></div>
-                {data.fullName && <div className=" space-x-4"><span className="font-bold">FullName: </span> <span>{data.fullName}</span></div>}
+                {data.fullName && <div className=" space-x-4"><span className="font-bold">FullName: </span> <span className="capitalize">{data.fullName}</span></div>}
                 {data.address && <div className=" space-x-4"><span className="font-bold">Address: </span> <span>{data.address}</span></div>}
-                {data.gender && <div className=" space-x-4"><span className="font-bold">Gender: </span> <span>{data.gender}</span></div>}
-                {data.gender && <div className=" space-x-4"><span className="font-bold">Date of birth : </span> <span>{data.gender}</span></div>}
+                {data.gender && <div className=" space-x-4"><span className="font-bold">Gender: </span> <span className=" capitalize">{data.gender}</span></div>}
+                {data.dob && <div className=" space-x-4"><span className="font-bold">Date of birth : </span> <span>{data.dob}</span></div>}
             </div>
             <button onClick={handleLogout} className="p-4 bg-third text-white rounded-xl  m-10 h-fit md:w-fit  text-base md:text-xl">LogOut</button>
         </div> :
