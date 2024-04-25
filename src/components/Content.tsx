@@ -41,7 +41,7 @@ export default function Content() {
         fetchData();
     }, [token])
     return <div >
-        {data ? <div className="flex justify-between">
+        {data ? <div className="flex flex-col">
             <div className="p-5 shadow-sm w-fit tracking-wide text-xl">
                 <div className=" h-20 w-20 bg-[#E5F0FF] rounded-full flex justify-center ">
                     <img className="  h-full w-full object-cover" src="https://s3-alpha-sig.figma.com/img/96ca/4f3c/99225394e50df5e7a78773cc97a178c7?Expires=1714953600&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=RSi7qlrvAk3-BW736fvYQVTIhHbc9sAtKUjTgG0CtAqsD8zO-uE8JDeHru-5VxBQYeMiY1nfH6mEVvpExpNza0AJ0pSk1XEBcrIcdaTFFKh58d3tw5p4OPj1TYspHLvWzUI7uZ3s2nlWJtG05qnUzU5zChp0ZF1nirFdEWXCbW2EXpjL78TIMKVKOFPCcKVQw8MRwLgkBAFF4POTl7rHUTBIkQSGCWNGMqabGv37UZuM~PtlJe4-fuWCDhSd7WiciD1XtlmTszyydTQPgpm-RwYPkNpq7St9EYjPHaN7uuN0WyBgR6-mHbPDdm~txhORPs39zt3eAlX5qSgz6xYbaQ__" alt="" />
@@ -54,7 +54,7 @@ export default function Content() {
                 {data.gender && <div className=" space-x-4"><span className="font-bold">Gender: </span> <span>{data.gender}</span></div>}
                 {data.gender && <div className=" space-x-4"><span className="font-bold">Date of birth : </span> <span>{data.gender}</span></div>}
             </div>
-            <button onClick={handleLogout} className="p-4 bg-third text-white rounded-xl m-10 h-fit text-base md:text-xl">LogOut</button>
+            <button onClick={handleLogout} className="p-4 bg-third text-white rounded-xl  m-10 h-fit md:w-fit  text-base md:text-xl">LogOut</button>
         </div> :
             <div className="flex justify-between">
                 <div className="text-xl  p-10">Home</div>
