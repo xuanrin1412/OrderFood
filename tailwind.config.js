@@ -30,13 +30,13 @@ export default {
         "Inter": ['"Inter"', ...defaultTheme.fontFamily.sans],
       },
       screens: {
-        'sm': '576px',
+        'sm': '350px',
         // => @media (min-width: 576px) { ... }
 
         'md': '960px',
         // => @media (min-width: 960px) { ... }
 
-        'lg': '1024px',
+        'lg': '1124px',
         // => @media (min-width: 1024px) { ... }
 
         'xl': '1400px',

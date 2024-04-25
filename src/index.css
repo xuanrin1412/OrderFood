@@ -110,3 +110,7 @@
     width: 5.78rem;
     margin-left: 20px !important;
 }
+
+.styleDob::placeholder {
+    color: "#96A0B5";
+}

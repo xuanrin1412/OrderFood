@@ -30,28 +30,6 @@ const formAuthSlice = createSlice({
             state.showPassword = false
         }
     }
-    
-    // toggleTodo: (state, action: PayloadAction<number>) => {
-     
-    //     const todoIndex = state.todos.findIndex(todo => todo.id === action.payload);
-    //     state.todos[todoIndex].completed = !state.todos[todoIndex].completed ;
-     
-    //   return state;
-    // },
-    // setFilter: (state, action: PayloadAction<VisibilityFilter>) => {
-    //   state.filter = action.payload;
-    //   switch (action.payload) {
-    //     case VisibilityFilter.SHOW_ACTIVE:
-    //       state.filteredTodos = state.todos.filter(todo => !todo.completed);
-    //       break;
-    //     case VisibilityFilter.SHOW_COMPLETED:
-    //       state.filteredTodos = state.todos.filter(todo => todo.completed);
-    //       break;
-    //     default:
-    //       state.filteredTodos = state.todos;
-    //       break;
-    //   }
-    // },
   },
 });
 
