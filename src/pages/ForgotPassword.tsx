@@ -7,20 +7,40 @@ import { useState } from "react";
 import { HiOutlineMail } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
+import axios from "../api/axios";
+import { toast } from "react-toastify";
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState<string>("")
-    const [sentEmail, setSentEmail] = useState<boolean>(true)
+    const [sentEmail, setSentEmail] = useState<boolean>(false)
     //avoid eslintrc
-    console.log(setSentEmail(true));
+    // console.log(setSentEmail(true));
 
     const dispatch = useDispatch()
     const focusedInput: string = useSelector((state: RootState) => state.forms.focusedInput);
     const handleInputFocus = (inputName: string) => {
         dispatch(setFocus(inputName))
     };
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleCheckEmail = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        toast("Checking your email !!")
+        axios.post("/api/forgot-password", {
+            email
+        })
+            .then((res) => {
+                console.log("forgot passs");
+                console.log(res);
+                setSentEmail(true)
+            })
+            .catch(err => {
+                console.log("err password");
+
+                console.log(err);
+                toast.error(<p className=" capitalize">{err.response.data.message}</p>)
+
+
+            })
+
         console.log(email);
     }
     return <div className="max-h-[1024px] flex ">
@@ -39,38 +59,35 @@ export default function ForgotPassword() {
                         <div className="leftCircle"></div></div>
                     <span className="text-[1.75rem] leading-6 text-[#062046] dark:text-white font-bold">Insight CO</span>
                 </div>
-                <form onSubmit={handleSubmit} className="mx-auto md:mx-0  max-w-[400px] md:max-w-[400px] lg:max-w-[28.125rem] xl:max-w-[33.75rem] mt-12 flex flex-col gap-8">
+                <form onSubmit={handleCheckEmail} className="mx-auto md:mx-0  max-w-[400px] md:max-w-[400px] lg:max-w-[28.125rem] xl:max-w-[33.75rem] mt-12 flex flex-col gap-8">
 
                     {sentEmail ? <div className=" flex flex-col gap-3">
                         <div className=" font-bold text-2xl leading-9 text-[#292C38] dark:text-white">Verify Your Email</div>
                         <div className="text-sm font-medium ">
                             <span className="text-textsecondary dark:text-textMain">We've sent a link to your email address:</span>&nbsp;
-                            <span className=" text-third ">youremail@gmail.com</span></div>
+                            <a href="mailto:{email}">
+                                <span className="text-third">{email}</span>
+                            </a></div>
                     </div> : <div className=" flex flex-col gap-3">
                         <div className=" font-bold text-2xl leading-9 text-[#292C38] dark:text-white">Forgot Password?</div>
                         <div className="text-sm font-medium text-textsecondary dark:text-textMain">Enter your email, we will send you the confirmation code</div>
                     </div>}
                     <div className="flex flex-col gap-4">
-                        {sentEmail ? <button type="submit" className="h-58  bg-third text-base leading-nomalText tracking-nomalText font-medium rounded-xl text-white ">Skip Now</button> : <span onFocus={() => { handleInputFocus("email") }}
+                        {sentEmail ? <button className="h-58  bg-third text-base leading-nomalText tracking-nomalText font-medium rounded-xl text-white ">Login Again</button> : <span onFocus={() => { handleInputFocus("email") }}
                             onBlur={() => dispatch(setBlur())}
                             className={`${focusedInput === 'email' ? ' border-third' : 'border-borderColor dark:border-[#565C70]'} h-58 flex items-center pt-[1.188rem] pb-[1.125rem] rounded-xl border  `}>
                             <HiOutlineMail style={{ height: 24, width: 24, marginLeft: 16, marginRight: 12, color: "#96A0B5" }} />
                             <input value={email} onChange={e => setEmail(e.target.value)} type="email" required placeholder="Email" className="stylePlaceholder flex-1 mr-[2.688rem] outline-none text-base leading-nomalText font-medium tracking-nomalText text-textInput dark:text-white bg-white dark:bg-[#292C38]  " />
                         </span>}
-
                     </div>
-
-                    {!sentEmail && <button type="submit" className="h-58  bg-third text-base leading-nomalText tracking-nomalText font-medium rounded-xl text-white ">Log In</button>}
+                    {!sentEmail && <button type="submit" className="h-58  bg-third text-base leading-nomalText tracking-nomalText font-medium rounded-xl text-white "><Link to="/change-password">Send email</Link></button>}
                     {sentEmail ? <div className="flex font-bold text-base">
-
                         <span className="text-textsecondary dark:text-textMain">Didn't receive an email?</span>&nbsp;
                         <span className="text-third "><Link to="/login">Resend  </Link></span>
-
                     </div> :
                         <div className="flex items-center justify-between custom-checkbox text-third font-bold text-base">
                             <Link to="/login">Back to Log in</Link>
                         </div>}
-
                 </form>
                 {!sentEmail && <div className=" md:max-w-[400px] lg:max-w-[28.125rem] xl:max-w-[33.75rem] pt-[8.313rem] pb-12 flex justify-center">
                     <span className="font-medium text-base leading-normalText tracking-normalText text-textsecondary dark:text-[#94A3B8]">Don't have an account?</span>&nbsp;

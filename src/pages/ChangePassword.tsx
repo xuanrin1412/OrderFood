@@ -14,9 +14,8 @@ import { FiUser } from "react-icons/fi";
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import axios from "../api/axios";
-import { jwtDecode } from "jwt-decode";
 
-export default function Login() {
+export default function ChangePassword() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const handleInputFocus = (inputName: string) => {
@@ -36,18 +35,13 @@ export default function Login() {
             password
         })
             .then((res) => {
-                Cookies.set("accessTokenFood", res.data.accessToken
-                    , { expires: 1 }
-                );
-                const decoded = jwtDecode(res.data.accessToken);
-                console.log("decoded", decoded);
-
+                Cookies.set("accessTokenFood", res.data.accessToken);
                 Cookies.set("refreshTokenFood", res.data.refreshToken);
                 toast("Login Successful")
                 return navigate("/")
             })
             .catch(err => {
-                // console.log(err.response.data.message);
+                console.log(err.response.data.message);
                 toast.error(<p className=" capitalize">{err.response.data.message}</p>)
 
 
@@ -71,8 +65,8 @@ export default function Login() {
                 </div>
                 <form onSubmit={handleSubmit} className="mx-auto md:mx-0  max-w-[400px] md:max-w-[400px] lg:max-w-[28.125rem] xl:max-w-[33.75rem] mt-12 flex flex-col gap-8">
                     <div className=" flex flex-col gap-3">
-                        <div className=" font-bold text-2xl leading-9 text-[#292C38] dark:text-white">Hi, Welcome Back!</div>
-                        <div className="text-sm font-medium text-textsecondary dark:text-textMain">Log In to your account</div>
+                        <div className=" font-bold text-2xl leading-9 text-[#292C38] dark:text-white">Login with new Password</div>
+                        {/* <div className="text-sm font-medium text-textsecondary dark:text-textMain">Log In to your account</div> */}
                     </div>
                     <div className="flex flex-col gap-4">
                         <span onFocus={() => handleInputFocus("username")}
