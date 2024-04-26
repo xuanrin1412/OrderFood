@@ -18,7 +18,9 @@ export default function Content() {
     console.log("accessTokenFood", accessTokenFood);
 
     const refreshTokenFood = Cookies.get("refreshTokenFood");
-    console.log("refreshTokenFood", refreshTokenFood);
+    const handleLogout = () => {
+        Cookies.remove('accessTokenFood')
+    }
     const refreshAccessToken = async () => {
         try {
             const res = await axios.get("https://back-end-zens-training.vercel.app/api/refresh-token", {
@@ -29,12 +31,12 @@ export default function Content() {
             const newAccessToken = res.data.accessToken;
             Cookies.set("accessTokenFood", newAccessToken);
             console.log("New access token:", newAccessToken);
-            fetchData();
         } catch (error: any) {
             console.log("Error refreshing access token:", error.response.data);
         }
     };
-    const fetchData = async () => {
+
+    const fetchData = useCallback(async () => {
         try {
             const res = await axios.get("https://back-end-zens-training.vercel.app/api/profile", {
                 headers: {
@@ -44,27 +46,19 @@ export default function Content() {
             setData(res.data);
         } catch (error: any) {
             if (error.response && error.response.data.statusCode === 401) {
-                console.log("erroe 401");
-
                 await refreshAccessToken();
-                fetchData();
+                await fetchData();
             } else {
                 console.log(error.response.data);
             }
         }
-    };
-    const memoizedFetchData = useCallback(fetchData, [accessTokenFood, fetchData, refreshAccessToken]);
+    }, [accessTokenFood]);
 
     useEffect(() => {
-        memoizedFetchData();
-    }, [memoizedFetchData]);
-
-    const handleLogout = () => {
-        Cookies.remove('accessTokenFood')
-        fetchData()
-
-    }
-
+        if (accessTokenFood) {
+            fetchData();
+        }
+    }, [accessTokenFood, fetchData]);
 
     return <div >
         {data ? <div className="flex flex-col">
