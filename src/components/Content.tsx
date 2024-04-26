@@ -1,4 +1,5 @@
-import axios from "axios";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import axios from "../api/axios";
 import { useState, useEffect, useCallback } from "react";
 import Cookies from 'js-cookie';
 import { Link } from "react-router-dom";
@@ -15,15 +16,11 @@ interface UserData {
 export default function Content() {
     const [data, setData] = useState<UserData | undefined>()
     const accessTokenFood = Cookies.get("accessTokenFood");
-    console.log("accessTokenFood", accessTokenFood);
 
     const refreshTokenFood = Cookies.get("refreshTokenFood");
-    const handleLogout = () => {
-        Cookies.remove('accessTokenFood')
-    }
     const refreshAccessToken = async () => {
         try {
-            const res = await axios.get("https://back-end-zens-training.vercel.app/api/refresh-token", {
+            const res = await axios.get("/api/refresh-token", {
                 headers: {
                     Authorization: `Bearer ${refreshTokenFood}`,
                 },
@@ -31,34 +28,51 @@ export default function Content() {
             const newAccessToken = res.data.accessToken;
             Cookies.set("accessTokenFood", newAccessToken);
             console.log("New access token:", newAccessToken);
-        } catch (error: any) {
-            console.log("Error refreshing access token:", error.response.data);
+            fetchData();
+        } catch (error) {
+            console.log("Error refreshing access token:", error);
         }
     };
-
-    const fetchData = useCallback(async () => {
+    const fetchData = async () => {
         try {
-            const res = await axios.get("https://back-end-zens-training.vercel.app/api/profile", {
+            const res = await axios.get("/api/profile", {
                 headers: {
                     Authorization: `Bearer ${accessTokenFood}`,
                 },
             });
             setData(res.data);
         } catch (error: any) {
-            if (error.response && error.response.data.statusCode === 401) {
+            if (error.response && error.response.data.statusCode === 401 && refreshTokenFood) {
+                console.log("erroe 401");
                 await refreshAccessToken();
-                await fetchData();
             } else {
-                console.log(error.response.data);
+                console.log("err fetchData not 401", error.response.data);
             }
         }
-    }, [accessTokenFood]);
-
+    };
+    const memoizedFetchData = useCallback(fetchData, [accessTokenFood]);
     useEffect(() => {
-        if (accessTokenFood) {
-            fetchData();
+        memoizedFetchData();
+    }, [memoizedFetchData, accessTokenFood]);
+
+    const handleLogout = async () => {
+        try {
+            const res = await axios.get("/api/logout", {
+                headers: {
+                    Authorization: `Bearer ${accessTokenFood}`,
+                },
+            });
+            console.log("res handleLogout ", res);
+            Cookies.remove('accessTokenFood')
+            Cookies.remove('refreshTokenFood')
+            setData(undefined)
+
+        } catch (error) {
+            console.log("err handleLogout", error);
         }
-    }, [accessTokenFood, fetchData]);
+
+    };
+
 
     return <div >
         {data ? <div className="flex flex-col">
