@@ -16,7 +16,7 @@ import { setBlur, setFocus, togglePassword } from "../features/FormAuth/formAuth
 import { RootState } from '../store';
 import PasswordStrengthBar from 'react-password-strength-bar';
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../api/axios";
 import { toast } from 'react-toastify';
 
 export default function Register() {
@@ -57,7 +57,7 @@ export default function Register() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (checked) {
-            axios.post("https://back-end-zens-training.vercel.app/api/v1/register", {
+            axios.post("/api/register", {
                 username,
                 email,
                 password,

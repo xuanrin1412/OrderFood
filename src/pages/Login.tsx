@@ -9,11 +9,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store';
 import { setBlur, setFocus, togglePassword } from "../features/FormAuth/formAuthSlice";
-import axios from "axios";
 import { useState } from "react";
 import { FiUser } from "react-icons/fi";
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
+import axios from "../api/axios";
 
 export default function Login() {
     const navigate = useNavigate()
@@ -30,12 +30,15 @@ export default function Login() {
     const [password, setPassword] = useState<string>("")
     const handleSubmit = (e: { preventDefault: () => void; }) => {
         e.preventDefault()
-        axios.post("https://back-end-zens-training.vercel.app/api/v2/login", {
+        axios.post("/api/login", {
             username,
             password
         })
             .then((res) => {
-                Cookies.set("tokenFood", res.data.access_token);
+                console.log("==Take out response when login==");
+                console.log(res);
+                Cookies.set("accessTokenFood", res.data.accessToken);
+                Cookies.set("refreshTokenFood", res.data.refreshToken);
                 toast("Login Successful")
                 return navigate("/")
             })

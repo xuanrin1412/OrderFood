@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Cookies from 'js-cookie';
 import { Link } from "react-router-dom";
 interface UserData {
@@ -12,34 +12,60 @@ interface UserData {
     dob: string;
     role: string
 }
-
 export default function Content() {
     const [data, setData] = useState<UserData | undefined>()
-    const token = Cookies.get("tokenFood");
+    const accessTokenFood = Cookies.get("accessTokenFood");
+    console.log("accessTokenFood", accessTokenFood);
+
+    const refreshTokenFood = Cookies.get("refreshTokenFood");
+    console.log("refreshTokenFood", refreshTokenFood);
+    const refreshAccessToken = async () => {
+        try {
+            const res = await axios.get("https://back-end-zens-training.vercel.app/api/refresh-token", {
+                headers: {
+                    Authorization: `Bearer ${refreshTokenFood}`,
+                },
+            });
+            const newAccessToken = res.data.accessToken;
+            Cookies.set("accessTokenFood", newAccessToken);
+            console.log("New access token:", newAccessToken);
+            fetchData();
+        } catch (error: any) {
+            console.log("Error refreshing access token:", error.response.data);
+        }
+    };
+    const fetchData = async () => {
+        try {
+            const res = await axios.get("https://back-end-zens-training.vercel.app/api/profile", {
+                headers: {
+                    Authorization: `Bearer ${accessTokenFood}`,
+                },
+            });
+            setData(res.data);
+        } catch (error: any) {
+            if (error.response && error.response.data.statusCode === 401) {
+                console.log("erroe 401");
+
+                await refreshAccessToken();
+                fetchData();
+            } else {
+                console.log(error.response.data);
+            }
+        }
+    };
+    const memoizedFetchData = useCallback(fetchData, [accessTokenFood, fetchData, refreshAccessToken]);
+
+    useEffect(() => {
+        memoizedFetchData();
+    }, [memoizedFetchData]);
+
     const handleLogout = () => {
-        Cookies.remove('tokenFood')
-        setData(undefined)
+        Cookies.remove('accessTokenFood')
+        fetchData()
 
     }
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
 
-                if (!token) {
-                    throw new Error("Token not found");
-                }
-                const res = await axios.get("https://back-end-zens-training.vercel.app/api/v2/profile", {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                setData(res.data);
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchData();
-    }, [token])
+
     return <div >
         {data ? <div className="flex flex-col">
             <div className="p-5 shadow-sm w-fit tracking-wide text-xl">
