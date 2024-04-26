@@ -89,7 +89,7 @@ export default function Login() {
                             <input type="checkbox" />
                             <span className="checkbox-container  bg-white dark:bg-transparent   dark:border-[#565C70]"></span>
                         </label>
-                        <span className=" text-third font-bold text-base">Forgot Password?</span>
+                        <span className=" text-third font-bold text-base"><Link to="/forgot-password">Forgot Password?</Link></span>
                     </div>
                     <button type="submit" className="h-58  bg-third text-base leading-nomalText tracking-nomalText font-medium rounded-xl text-white ">Log In</button>
                     <div className="divider dark:before:bg-[#565C70] dark:after:bg-[#565C70] ">
