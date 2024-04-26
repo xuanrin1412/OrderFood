@@ -35,8 +35,6 @@ export default function Login() {
             password
         })
             .then((res) => {
-                console.log("==Take out response when login==");
-                console.log(res);
                 Cookies.set("accessTokenFood", res.data.accessToken);
                 Cookies.set("refreshTokenFood", res.data.refreshToken);
                 toast("Login Successful")
