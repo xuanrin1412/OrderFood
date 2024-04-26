@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "../api/axios";
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 interface UserData {
     id: string;
     username: string;
@@ -16,7 +17,6 @@ interface UserData {
 export default function Content() {
     const [data, setData] = useState<UserData | undefined>()
     const accessTokenFood = Cookies.get("accessTokenFood");
-
     const refreshTokenFood = Cookies.get("refreshTokenFood");
     const refreshAccessToken = async () => {
         try {
@@ -27,7 +27,6 @@ export default function Content() {
             });
             const newAccessToken = res.data.accessToken;
             Cookies.set("accessTokenFood", newAccessToken);
-            console.log("New access token:", newAccessToken);
             fetchData();
         } catch (error) {
             console.log("Error refreshing access token:", error);
@@ -35,6 +34,9 @@ export default function Content() {
     };
     const fetchData = async () => {
         try {
+            if (!accessTokenFood) {
+                return;
+            }
             const res = await axios.get("/api/profile", {
                 headers: {
                     Authorization: `Bearer ${accessTokenFood}`,
@@ -43,7 +45,6 @@ export default function Content() {
             setData(res.data);
         } catch (error: any) {
             if (error.response && error.response.data.statusCode === 401 && refreshTokenFood) {
-                console.log("erroe 401");
                 await refreshAccessToken();
             } else {
                 console.log("err fetchData not 401", error.response.data);
@@ -57,17 +58,17 @@ export default function Content() {
 
     const handleLogout = async () => {
         try {
-            const res = await axios.get("/api/logout", {
+            await axios.get("/api/logout", {
                 headers: {
                     Authorization: `Bearer ${accessTokenFood}`,
                 },
             });
-            console.log("res handleLogout ", res);
             Cookies.remove('accessTokenFood')
             Cookies.remove('refreshTokenFood')
             setData(undefined)
 
         } catch (error) {
+            toast("Logout error !")
             console.log("err handleLogout", error);
         }
 
