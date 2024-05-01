@@ -1,6 +1,6 @@
 import USFflag from "../assets/USFlag.png"
 import { IoChevronDown } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setBlur, setFocus, } from "../features/FormAuth/formAuthSlice";
 import SideTheme from "../components/SideTheme";
 import { useState } from "react";
@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 export default function ForgotPassword() {
     const [email, setEmail] = useState<string>("")
     const [sentEmail, setSentEmail] = useState<boolean>(false)
+    const navigate = useNavigate()
     //avoid eslintrc
     // console.log(setSentEmail(true));
 
@@ -21,20 +22,20 @@ export default function ForgotPassword() {
     const handleInputFocus = (inputName: string) => {
         dispatch(setFocus(inputName))
     };
-    const handleCheckEmail = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleCheckEmail = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        toast("Checking your email !!")
-        axios.post("/api/forgot-password", {
+        await axios.post("/api/forgot-password", {
             email
         })
             .then((res) => {
+                toast("Checking your email !!")
+                navigate("/change-password")
                 console.log("forgot passs");
                 console.log(res);
                 setSentEmail(true)
             })
             .catch(err => {
                 console.log("err password");
-
                 console.log(err);
                 toast.error(<p className=" capitalize">{err.response.data.message}</p>)
 
@@ -80,7 +81,7 @@ export default function ForgotPassword() {
                             <input value={email} onChange={e => setEmail(e.target.value)} type="email" required placeholder="Email" className="stylePlaceholder flex-1 mr-[2.688rem] outline-none text-base leading-nomalText font-medium tracking-nomalText text-textInput dark:text-white bg-white dark:bg-[#292C38]  " />
                         </span>}
                     </div>
-                    {!sentEmail && <button type="submit" className="h-58  bg-third text-base leading-nomalText tracking-nomalText font-medium rounded-xl text-white "><Link to="/change-password">Send email</Link></button>}
+                    {!sentEmail && <button type="submit" className="h-58  bg-third text-base leading-nomalText tracking-nomalText font-medium rounded-xl text-white ">Send email</button>}
                     {sentEmail ? <div className="flex font-bold text-base">
                         <span className="text-textsecondary dark:text-textMain">Didn't receive an email?</span>&nbsp;
                         <span className="text-third "><Link to="/login">Resend  </Link></span>

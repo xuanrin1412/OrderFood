@@ -37,7 +37,7 @@ export default function Login() {
         })
             .then((res) => {
                 Cookies.set("accessTokenFood", res.data.accessToken
-                    , { expires: 1 }
+
                 );
                 const decoded = jwtDecode(res.data.accessToken);
                 console.log("decoded", decoded);

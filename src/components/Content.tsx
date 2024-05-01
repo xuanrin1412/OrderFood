@@ -25,10 +25,11 @@ export default function Content() {
                     Authorization: `Bearer ${refreshTokenFood}`,
                 },
             });
-            const newAccessToken = res.data.accessToken;
-            Cookies.set("accessTokenFood", newAccessToken);
+            Cookies.set("accessTokenFood", res.data.accessToken);
+            Cookies.set("refreshTokenFood", res.data.refreshToken);
             fetchData();
         } catch (error) {
+            toast("Please login again!")
             console.log("Error refreshing access token:", error);
         }
     };
@@ -91,10 +92,11 @@ export default function Content() {
             </div>
             <button onClick={handleLogout} className="p-4 bg-third text-white rounded-xl  m-10 h-fit md:w-fit  text-base md:text-xl">LogOut</button>
         </div> :
-            <div className="flex justify-between">
-                <div className="text-xl  p-10">Home</div>
-                <button className="p-4 bg-third text-white rounded-xl m-10 h-fit text-base md:text-xl"> <Link to="/login">Login</Link></button>
-            </div>
+            <Link to="/login">
+                <div className="flex justify-between">
+                    <div className="text-xl  p-10">Home</div>
+                    <button className="p-4 bg-third text-white rounded-xl m-10 h-fit text-base md:text-xl"> Login</button>
+                </div></Link>
         }
 
 
