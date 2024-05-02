@@ -1,5 +1,5 @@
 import axios from "axios";
 
 export default axios.create({
-    baseURL:"https://back-end-zens-training.vercel.app"
+    baseURL:"http://192.168.0.180:8000"
 })

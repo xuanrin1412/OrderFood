@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "../api/axios";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Cookies from 'js-cookie';
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -20,6 +20,7 @@ export default function Content() {
     const refreshTokenFood = Cookies.get("refreshTokenFood");
     const refreshAccessToken = async () => {
         try {
+            console.log(refreshTokenFood, 1);
             const res = await axios.get("/api/refresh-token", {
                 headers: {
                     Authorization: `Bearer ${refreshTokenFood}`,
@@ -33,11 +34,10 @@ export default function Content() {
             console.log("Error refreshing access token:", error);
         }
     };
+
     const fetchData = async () => {
+        console.log(refreshTokenFood, 2);
         try {
-            if (!accessTokenFood) {
-                return;
-            }
             const res = await axios.get("/api/profile", {
                 headers: {
                     Authorization: `Bearer ${accessTokenFood}`,
@@ -45,17 +45,25 @@ export default function Content() {
             });
             setData(res.data);
         } catch (error: any) {
-            if (error.response && error.response.data.statusCode === 401 && refreshTokenFood) {
+            if (error.response && error.response.data.statusCode === 401) {
                 await refreshAccessToken();
             } else {
                 console.log("err fetchData not 401", error.response.data);
             }
         }
     };
-    const memoizedFetchData = useCallback(fetchData, [accessTokenFood]);
     useEffect(() => {
-        memoizedFetchData();
-    }, [memoizedFetchData, accessTokenFood]);
+        if (accessTokenFood) {
+            try {
+                console.log(" accessTokenFood");
+                fetchData()
+            } catch (error) {
+                console.log("error useEffect ", error);
+            }
+        } else {
+            refreshAccessToken()
+        }
+    }, [accessTokenFood]);
 
     const handleLogout = async () => {
         try {
@@ -67,12 +75,10 @@ export default function Content() {
             Cookies.remove('accessTokenFood')
             Cookies.remove('refreshTokenFood')
             setData(undefined)
-
         } catch (error) {
             toast("Logout error !")
             console.log("err handleLogout", error);
         }
-
     };
 
 

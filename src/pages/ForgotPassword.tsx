@@ -38,8 +38,6 @@ export default function ForgotPassword() {
                 console.log("err password");
                 console.log(err);
                 toast.error(<p className=" capitalize">{err.response.data.message}</p>)
-
-
             })
 
         console.log(email);
