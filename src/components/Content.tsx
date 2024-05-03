@@ -15,28 +15,39 @@ interface UserData {
     role: string
 }
 export default function Content() {
-    const [data, setData] = useState<UserData | undefined>()
-    const accessTokenFood = Cookies.get("accessTokenFood");
-    const refreshTokenFood = Cookies.get("refreshTokenFood");
+    const [data, setData] = useState<UserData | undefined>();
+    const [accessTokenFood, setAccessTokenFood] = useState<string | undefined>(
+        Cookies.get("accessTokenFood")
+    );
+    const [refreshTokenFood, setRefreshTokenFood] = useState<string | undefined>(
+        Cookies.get("refreshTokenFood")
+    );
+    console.log(setRefreshTokenFood);
+
     const refreshAccessToken = async () => {
         try {
-            console.log(refreshTokenFood, 1);
             const res = await axios.get("/api/refresh-token", {
                 headers: {
                     Authorization: `Bearer ${refreshTokenFood}`,
                 },
             });
-            Cookies.set("accessTokenFood", res.data.accessToken);
             Cookies.set("refreshTokenFood", res.data.refreshToken);
-            fetchData();
-        } catch (error) {
+            Cookies.set("accessTokenFood", res.data.accessToken);
+            setAccessTokenFood(res.data.accessToken);
+            setRefreshTokenFood(res.data.refreshToken);
+            // fetchData();
+        } catch (error: any) {
+            if (error.response.status === 403) {
+                toast("Refresh page please !")
+            } else {
+                toast("Please login again!")
+            }
             toast("Please login again!")
             console.log("Error refreshing access token:", error);
         }
     };
 
     const fetchData = async () => {
-        console.log(refreshTokenFood, 2);
         try {
             const res = await axios.get("/api/profile", {
                 headers: {
@@ -45,25 +56,30 @@ export default function Content() {
             });
             setData(res.data);
         } catch (error: any) {
-            if (error.response && error.response.data.statusCode === 401) {
+            if (refreshTokenFood && error.response && error.response.data.statusCode === 401) {
                 await refreshAccessToken();
             } else {
                 console.log("err fetchData not 401", error.response.data);
             }
         }
     };
+
     useEffect(() => {
-        if (accessTokenFood) {
+        const fetchDataWithRetry = async () => {
             try {
-                console.log(" accessTokenFood");
-                fetchData()
+                await fetchData();
             } catch (error) {
-                console.log("error useEffect ", error);
+                console.log("Error in useEffect:", error);
             }
+        };
+
+        if (accessTokenFood) {
+            fetchDataWithRetry();
         } else {
-            refreshAccessToken()
+            console.log("Not logged in");
         }
     }, [accessTokenFood]);
+
 
     const handleLogout = async () => {
         try {

@@ -14,7 +14,6 @@ import { FiUser } from "react-icons/fi";
 import { toast } from 'react-toastify';
 import Cookies from 'js-cookie';
 import axios from "../api/axios";
-import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
     const navigate = useNavigate()
@@ -36,12 +35,7 @@ export default function Login() {
             password
         })
             .then((res) => {
-                Cookies.set("accessTokenFood", res.data.accessToken
-
-                );
-                const decoded = jwtDecode(res.data.accessToken);
-                console.log("decoded", decoded);
-
+                Cookies.set("accessTokenFood", res.data.accessToken);
                 Cookies.set("refreshTokenFood", res.data.refreshToken);
                 toast("Login Successful")
                 return navigate("/")
